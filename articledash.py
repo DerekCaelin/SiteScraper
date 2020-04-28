@@ -1,5 +1,11 @@
 import requests
 import csv
+import pandas as pd
+import nltk
+#nltk.download('stopwords')
+from nltk.corpus import stopwords
+from collections import Counter
+
 from bs4 import BeautifulSoup
 
 headers = {'User-Agent':'Mozilla/5.0'}
@@ -26,11 +32,12 @@ sitelist = [
     "https://onezero.medium.com/"
 ]
 
+def MakeCSV():
+    # create csv file
+    with open('sitedata.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Publication", "Title", "Description", "URL"])
 
-# create csv file
-with open('sitedata.csv', 'w',  newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(["Publication","Title","Description","URL"])
 
 # the parent function for all functions
 def Lookup(url):
@@ -147,7 +154,6 @@ def ScrapeType6(url):
         fullUrl = "https://onezero.medium.com"+link
         WriteCSV("OneZero", title, description, fullUrl)
 
-
 def WriteCSV(pub, title, dek, url):
     with open('sitedata.csv', 'a') as csvfile:
         writer = csv.writer(csvfile)
@@ -156,11 +162,43 @@ def WriteCSV(pub, title, dek, url):
         print(dek)
         print(url)
 
+def TitleWordCount(name, filter):
+    # concatenate the "Title" column into a single string
+    filteredwords = ' '.join(filter['Title'])
+    filterlist = []
+
+    # review the string and remove each stopword
+    for word in filteredwords.lower().split():
+        if word not in stopwords.words('english'):
+            filterlist.append(word)
+
+    newfilteredwords = ' '.join(filterlist)
+    counts = Counter(newfilteredwords.split()).most_common(5)
+
+    print(name)
+    print(filteredwords)
+    print(counts)
+    print('')
+
+
+    #print(counts)
+
 def Analysis():
-    a = 1
+    #open the scrape dataset with pandas and get the unique names of publications
+   table = pd.read_csv("sitedata.csv")
+   names = table.Publication.unique()
+
+    #for each publication, do various forms of analysis
+   for name in names:
+       filter = table[(table.Publication == name)]
+       TitleWordCount(name, filter)
+
+
 
 # The Beginning! Start the process
+#MakeCSV()
 for site in sitelist:
-    Lookup(site) #for each url in the list of urls, do the process
-    Analysis()
+    a = 1
+    #Lookup(site) #for each url in the list of urls, do the process
+Analysis()
 
