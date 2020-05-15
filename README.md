@@ -3,7 +3,7 @@ A python script to scrape the homepages of various technology websites and retur
 
 ![article scrape](https://i.imgur.com/ltVa6ok.png "Screenshot of articledata.csv")
 
-This python script uses [Beautiful Soap](https://www.crummy.com/software/BeautifulSoup/) to pull text and urls from websites, and exports the information into CSV files.
+This python script uses [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) to pull text and urls from websites, and exports the information into CSV files.
 
 Most websites are structured differently, so each individual website should be scraped through a unique process. Users who want to add to the script should:
 * load up the desired website in a browser
